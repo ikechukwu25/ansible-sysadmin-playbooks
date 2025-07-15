@@ -23,7 +23,7 @@ Applies security and system updates across Red Hat-based systems. Can be schedul
 
 **Goal:** Keep systems patched and compliant without logging into each server manually.
 
-## 🔧 Requirements
+## Requirements
 
 - Ansible 2.9+  
 - SSH access to target hosts  
@@ -37,3 +37,5 @@ Applies security and system updates across Red Hat-based systems. Can be schedul
 ```bash
 git clone https://github.com/ikechukwu25/ansible-sysadmin-playbooks.git
 cd ansible-sysadmin-playbooks
+
+2. Modify your inventory.ini or use your dynamic inventory.
