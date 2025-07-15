@@ -1,3 +1,5 @@
+---
+
 - name: Netcat 443 connectivity test from all hosts
   hosts: all
   become: yes
