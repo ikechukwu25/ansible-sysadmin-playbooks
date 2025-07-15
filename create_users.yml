@@ -1,0 +1,51 @@
+- name: Create users and configure settings
+  hosts: redhat_servers
+  become: yes
+
+  vars:
+    users:
+      - name: olubukola
+        is_sudo: true
+      - name: gabriel
+        is_sudo: true
+      - name: michael
+        is_sudo: true
+      - name: joy
+        is_sudo: true
+      - name: patrick
+        is_sudo: true
+      - name: charles
+        is_sudo: true
+      - name: austin
+        is_sudo: true
+      - name: david
+        is_sudo: true
+
+    user_default_password: "Ab123456"
+
+  tasks:
+
+    - name: Ensure user exists
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        password: "{{ user_default_password | password_hash('sha512') }}"
+        shell: /bin/bash
+        create_home: yes
+      loop: "{{ users }}"
+
+    - name: Force password change on first login
+      ansible.builtin.command: chage -d 0 {{ item.name }}
+      loop: "{{ users }}"
+
+    - name: Add user to wheel group if sudo
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        groups: wheel
+        append: yes
+      when: item.is_sudo
+      loop: "{{ users }}"
+
+    - name: Show user creation complete
+      debug:
+        msg: "User {{ item.name }} created"
+      loop: "{{ users }}"
