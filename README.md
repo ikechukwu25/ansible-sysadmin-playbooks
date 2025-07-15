@@ -43,3 +43,4 @@ cd ansible-sysadmin-playbooks
    ```
    ansible-playbook -i inventory.ini netcat_check.yml
    ```
+Replace netcat_check.yml with the playbook you want to run
