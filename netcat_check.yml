@@ -1,0 +1,54 @@
+- name: Netcat 443 connectivity test from all hosts
+  hosts: all
+  become: yes
+  vars:
+    targets_file: /tmp/targets.txt
+    output_file: /tmp/443_nc_results.txt
+
+  tasks:
+
+    - name: Ensure netcat is installed
+      package:
+        name: nc
+        state: present
+
+    - name: Copy target list to remote host
+      copy:
+        src: targets.txt
+        dest: "{{ targets_file }}"
+
+    - name: Run nc test for each target on port 443 and write summary
+      shell: |
+        echo "443 Netcat Test - $(date)" > {{ output_file }}
+        unreachable_hosts=""
+        while read -r host || [ -n "$host" ]; do
+          host=$(echo "$host" | xargs)
+          [ -z "$host" ] && continue
+
+          echo "Testing $host on port 443..." >> {{ output_file }}
+
+          if nc -z -w5 "$host" 443 > /dev/null 2>&1; then
+              echo "$host:443 is reachable" >> {{ output_file }}
+          else
+              echo "$host:443 is unreachable" >> {{ output_file }}
+              unreachable_hosts="$unreachable_hosts\n- $host"
+          fi
+
+          echo "----------------------------" >> {{ output_file }}
+        done < {{ targets_file }}
+
+        echo -e "\n========= Summary =========" >> {{ output_file }}
+        if [ -z "$unreachable_hosts" ]; then
+          echo "All hosts are reachable on port 443." >> {{ output_file }}
+        else
+          echo -e "Hosts unreachable on port 443:$unreachable_hosts" >> {{ output_file }}
+        fi
+        echo "===========================" >> {{ output_file }}
+      args:
+        executable: /bin/bash
+
+    - name: Fetch results back to Ansible control node
+      fetch:
+        src: "{{ output_file }}"
+        dest: "results/{{ inventory_hostname }}_443_nc_results.txt"
+        flat: yes
