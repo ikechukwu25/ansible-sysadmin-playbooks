@@ -40,7 +40,7 @@ cd ansible-sysadmin-playbooks
 ```
 2. Modify your `inventory.ini` or use your dynamic inventory.
 3. Run any playbook:
-   ```
-   ansible-playbook -i inventory.ini netcat_check.yml
-   ```
+```
+ansible-playbook -i inventory.ini netcat_check.yml
+```
 Replace netcat_check.yml with the playbook you want to run
