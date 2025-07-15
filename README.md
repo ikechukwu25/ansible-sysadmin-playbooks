@@ -34,8 +34,12 @@ Applies security and system updates across Red Hat-based systems. Can be schedul
 
 1. Clone this repo:
 
-```bash
+```
 git clone https://github.com/ikechukwu25/ansible-sysadmin-playbooks.git
 cd ansible-sysadmin-playbooks
-
-2. Modify your inventory.ini or use your dynamic inventory.
+```
+2. Modify your `inventory.ini` or use your dynamic inventory.
+3. Run any playbook:
+   ```
+   ansible-playbook -i inventory.ini netcat_check.yml
+   ```
