@@ -1,3 +1,5 @@
+----------
+
 - name: Create users and configure settings
   hosts: redhat_servers
   become: yes
